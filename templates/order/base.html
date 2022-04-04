@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+	<link rel="stylesheet" media="screen" href="{% static 'css/order/Fonts/bootstrap.min.css' %}">
+	<link rel="stylesheet" media="screen" href="{% static 'css/order/base.css' %}">
+	<link rel="shortcut icon" type="image/png" href="{% static 'images/order/favicon.jpg' %}">
+    {% block head_block %}
+		{% endblock %}
+	<title>Taj India Restaurant</title>
+
+</head>
+
+<body>
+	<!--Preloader-->
+	    <div class="preloader-wrapper">
+	            <div class="preloder-bg"></div>
+	            <div class="la-timer la-dark la-3x">
+	                <div>
+	                </div>
+	            </div>
+	        </div>
+	<!--Preloader-->
+
+
+	{% block body_block %}
+	{% endblock %}
+
+	<!--Footer Starts Here   -->
+	    <footer>
+	            <div class="container">
+	                <div class="row">
+	                    <div class="col-md-12">
+	                         <ul class="list-inline social-buttonsf">
+	                           <li>Follow Us:</li>
+														 <li><a href="https://www.instagram.com/taj_india_bonn/" target="_blank"><i class="fab fa-instagram"></i></a>
+														</li>
+														<li><a href="https://www.facebook.com/pg/TajBonn/" target="_blank">
+																<i class="fab fa-facebook"></i>
+														</a>
+														</li>
+														<li><a href="https://www.google.com/maps/place/Taj+India+Restaurant/@50.7395452,7.0974879,17z/data=!3m1!4b1!4m5!3m4!1s0x47bee1a6c92ffa89:0xbb8cd9ff5f6cb8fa!8m2!3d50.7395452!4d7.0996766" target="_blank">
+															 <i class="fas fa-map-marker-alt"></i>
+														</a>
+														</li>
+														<li><a href="https://www.tripadvisor.com/Restaurant_Review-g187370-d2071577-Reviews-Taj_India_Restaurant-Bonn_North_Rhine_Westphalia.html" target="_blank"><i class="fab fa-tripadvisor"></i></a></li>
+	                        </ul>
+	                    </div>
+	                </div>
+	            </div>
+	        </footer>
+	<!--Footer Ends Here-->
+
+	<script src="{% static 'js/jquery.min.js' %}"></script>
+	<script src="{% static 'js/order/base.js' %}"></script>
+
+	{% block foot_block %}
+	{% endblock %}
+
+</body>
+
+</html>

@@ -1,0 +1,231 @@
+{% extends "order/base.html" %}
+{% load static %}
+
+{% block head_block %}
+
+  	<link rel="stylesheet" href="{% static "css/order/menu.css" %}"/>
+
+{% endblock %}
+
+
+{% block body_block %}
+
+<!--Pop Up Box-->
+<div class="modal" id="modal2" data-animation="mixInAnimations">
+  <div class="modal-dialog">
+    <header class="modal-header">Call Waiter</header>
+    <section class="modal-content">
+      <p>Someone will be with you shortly.</p>
+      <button id="close" class="close-modal" aria-label="close modal" data-close>
+        Close
+      </button>
+    </section>
+  </div>
+</div>
+
+<!--Pop Up Box-->
+
+{% if messages %}
+{% for message in messages %}
+
+<div class="modal1" id="modal">
+  <div class="modal-dialog1">
+    <header class="modal-header">Alert
+    
+    </header>
+    <section class="modal-content">
+      <p>{{ message }}</p>
+        <button id="close" class="close-modal1" data-dismiss="alert" onclick="this.parentElement.parentElement.parentElement.style.display='none'">
+                Close
+              </button>
+            </section>
+  </div>
+</div>
+{% endfor %}
+{% endif %}
+
+
+<!--Navbar Starts Here -->
+    <nav id="navbar" class="navbar navbar-default">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+<!--
+      <button style="color: #FFECB1" type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span style="background-color: #FFECB1" class="sr-only">Toggle navigation</span>
+        <span style="background-color: #FFECB1" class="icon-bar"></span>
+        <span style="background-color: #FFECB1" class="icon-bar"></span>
+        <span style="background-color: #FFECB1" class="icon-bar"></span>
+      </button>
+-->
+      <a class="navbar-brand"><img src="{% static 'images/order/Taj_india_Logo.png' %}" alt=""></a>
+      <a  href="#" id="callButton"  class="dropdown dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><img src="{% static 'images/order/waiter.png' %}"></a>
+          <ul class="dropdown-menu">
+            <li><a class="open-modal" data-open="modal2" onclick="CallWaiter({{ tableNumber }})"><i class="fas fa-phone-volume"></i>&nbsp;&nbsp; Call Waiter</a></li>
+          </ul>
+      </div>
+    </div>
+</nav>
+<!--Navbar Ends Here-->
+
+
+<!--SearchBar-->
+<div class="row">
+               <div class="col-xs-12">
+                   <form method="get" action="/search" id="searchbox5">
+                    <input id="search51" onkeyup="myfood()" name="q" type="text" size="40" placeholder="Search..." />
+                </form>
+               </div>
+           </div>
+<!--SearchBar-->
+
+
+
+
+<!--ImageSlider Starts Here-->
+  <div class="imageSlider">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="mySlides fade">
+                  <img id="id1" src="">
+                  <div class="text">Welcome To</div>
+                </div>
+
+                <div class="mySlides fade">
+                  <img id="id2" src="">
+                  <div class="text">Taj India Restaurant</div>
+                </div>
+
+                <div class="mySlides fade">
+                  <img id="id3" src="">
+                  <div class="text">Here Food is Cooked With Love</div>
+                </div>
+
+        </div>
+     </div>
+    </div>
+    <br>
+    <div style="text-align:center">
+      <span class="dot"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+    </div>
+<!--ImageSlider Ends Here -->
+
+
+<!--Menu Starts Here   -->
+    <section id="menu">
+    <div class="container-fluid">
+        <h1 id="thali" class="text-center main-header">Menu</h1>
+        <span class="double-border-seprator"></span>
+        {% for menu in menu_list %}
+        <div class="row item menu{{ menu.pk }}">
+            <button class="collapsible">
+              <div class="col-xs-9"> <span class="menu-title">{{ menu.name }}</span></div>
+              <div class="col-xs-3"><h5 class="item-price">€ {{ menu.price3 }}</h5></div>
+               <div class="col-xs-10"><p class="menu-subtitle">für Zwei Personen nur € {{ menu.price2 }}</p></div>
+                </button>
+                <div class="content">
+                  {{ menu.body | safe }}
+                </div>
+               </div>
+        {% endfor %}
+    </div>
+    </section>
+ <!--Menu Ends Here-->
+
+{% for category in category_list %}
+
+   <!--Parallax Starts Here-->
+   <div class="parallax">
+    <img src="{{ category.images.url }}" alt="">
+     <div class="centers">
+          <h1 id="{{ category.name }}">{{ category.name }}</h1>
+    </div>
+</div>
+   <!--Parallax Ends Here-->
+
+   <section id="menu">
+    <div class="container-fluid">
+
+   {% for item in category.products.all %}
+   <div class="row item item{{ item.pk }}">
+       <button class="collapsible">
+            <div class="col-xs-9"> <span class="menu-title">{% if item.article_number %}{{ item.article_number }}. {% endif %}{{ item.name }}</span></div>
+            <div class="col-xs-3"><h5 class="item-price">€ {{ item.price }}</h5></div>
+            <div class="col-xs-10"><p class="menu-subtitle">{{ item.description }}</p></div>
+          </button>
+          </div>
+   {% endfor %}
+ </div>
+</section>
+{% endfor %}
+
+
+   <!--AsideParaalax Starts Here   -->
+   <div id="parralaxaside" style="background-image: url({% static 'images/order/parallex/parralax.jpg' %})">
+     <div class="center">
+       <h1>Live ,Love ,Eat .</h1>
+     </div>
+   </div>
+   <!--AsideParallax Ends Here-->
+
+   <!--Filter Button Starts Here  -->
+   <button id="filterBtn" class="btn" style="bottom: 28px"><i class="fas fa-filter fa-2x"></i></button>
+    <section style="bottom: 92px" id="category-panel" class="animated fadeInUp">
+      <header id="vegsection">
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="col-xs-6">
+            <p id="vegonly" for="">Veg</p>
+                <label class="switchb">
+                    <input type="checkbox" unchecked>
+                    <span class="sliderb round"></span>
+                </label>
+        </div>
+        <div class="col-xs-6">
+            <p id="vegonly" for="">Vegan</p>
+                <label class="switchb">
+                    <input type="checkbox" unchecked>
+                    <span class="sliderb round"></span>
+                </label>
+        </div>
+            </div>
+        </div>
+    </header>
+
+     {% for category in category_list %}
+     <div class="row">
+         <div class="col-xs-9"><p class="filter-item btn btn-default"><a class="tan" href="#{{ category.name }}">{{ category.name }}</a></p></div>
+         <div class="col-xs-3"><p class="filter-item btn btn-default"><span class="aan">{{ category.products.count }}</span></p></div>
+     </div>
+     <hr style="border-top: 2px dashed #fff">
+    {% endfor %}
+  </section>
+  <!-- Filter Button Ends Here-->
+{% endblock %}
+
+
+
+
+
+{% block foot_block %}
+
+<div id="not-found" style="font-size: 22px;color: #FFECB1;text-align: center;font-weight: bold;margin-top: 10px;display: none">No Result Found</div>
+   <p id="extra" style="padding-bottom: 100px;display: none"></p>
+
+
+    <script>
+     slideImage1 = '{% static "images/order/slider_image/slideImage1.jpg" %}';
+     slideImage2 = '{% static "images/order/slider_image/slideImage2.jpg" %}';
+     slideImage3 = '{% static "images/order/slider_image/slideImage3.jpg" %}';
+     parallaxImage = '{% static "images/order/parallex/parralax.jpg" %}';
+
+    </script>
+	  <script src="{% static 'js/order/staticmenu.js' %}"></script>
+{% endblock %}
+
+</body>
+
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+{% load static %}
+{% load bootstrap4 %}
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+    <div class="split left" data-spy="scroll" data-target=".navbar" data-offset="50">
+    <!--  Navbar-->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+
+          <a class="navbar-brand">Taj India Restaurant</a>
+        </div>
+      </div>
+    </nav>
+    <!--  Navbar-->
+    <div class="container">
+    <div class="jumbotron">
+
+    <h3>Please Login</h3>
+          <form method="POST" class="form">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            {% buttons %}
+            <button type="submit" class="btn btn-primary btn-block">Login</button>
+            {% endbuttons %}
+          </form>
+        </div>
+      </div>
+
+  </body>
+</html>

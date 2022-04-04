@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="{% static 'css/order/Fonts/bootstrap.min.css' %}">
+
+	<title>Admin Taj India Restaurant</title>
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+   <link rel="stylesheet" href="{% static 'css/accounts/admin.css' %}">
+    <link rel="stylesheet" href="{% static 'css/accounts/admin.css' %}">
+</head>
+
+<body>
+
+<!--Left Section-->
+<div class="split left" data-spy="scroll" data-target=".navbar" data-offset="50">
+<!--  Navbar-->
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand">Taj India Restaurant</a>
+    </div>
+    <div>
+      <div class="collapse navbar-collapse" id="myNavbar">
+        <ul class="nav navbar-nav">
+          <li><a href="{% url 'accounts:index' %}">Tables</a></li>
+          <li><a href="{% url 'accounts:items_list' %}" target="_blank">Items</a></li>
+					<li><a href="{% url 'accounts:feedback_list' %}" target="_blank">Feedback</a></li>
+					<li class="nav-item dropdown">
+		        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		          Profile
+		        </a>
+		        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="background-color:#222;">
+		          <a class="dropdown-item" href="{% url 'accounts:change_password' %}" target="_blank" style="color:white; padding-left:10px;">Change Password</a>
+		          <a class="dropdown-item" href="{% url 'accounts:logout' %}" style="color:white; padding-left:10px;">Logout</a>
+		        </div>
+		      </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>
+<!--  Navbar-->
+
+
+
+<!--Table Tiles-->
+<div id="tables" style="min-height: 750px" class="container-fluid">
+
+
+<!--Active Tables Heading-->
+<div class="row">
+    <div class="col-sm-8">
+        <div class="active-text">
+            Active Tables
+        </div>
+    </div>
+    <div class="col-sm-4">
+                <a href="{% url 'accounts:create_table' %}" id="add-more" class="btn btn-lg">+ &nbsp;Add new table</a>
+        </div>
+</div>
+<!--Active Tables Heading-->
+
+<!--Active Tables-->
+    <div class="activetables">
+
+           <div class="row">
+               <div class="col-sm-12">
+                   <div class="no-active-text">* There are currently no active tables *</div>
+               </div>
+           </div>
+
+        <div class="row rowActive">
+          {% for table in table_list %}
+          {% if table.availaible %}
+          {% else %}
+          <div class="col-sm-3" id="Table{{ table.tableNumber }}">
+            <a href="{% url 'accounts:view_table' pk=table.tableNumber %}" target="_blank" class="btn btn-lg tableno">Table No.
+              <span class="tablenos">&nbsp;{{ table.tableNumber }}</span></a>
+          </div>
+          {% endif %}
+          {% endfor %}
+        </div>
+    </div>
+<!--Active Tables-->
+
+<!--Inactive Tables Heading-->
+    <div class="row">
+    <div class="col-sm-12">
+        <div class="inactive-text">
+            Inactive Tables
+        </div>
+    </div>
+        </div>
+<!--Inactive Tables Heading-->
+
+<!--Inactive Tables-->
+    <div class="inactivetables">
+			<div class="row">
+					<div class="col-sm-12">
+							<div class="no-active-text">* Currently all tables are active *</div>
+					</div>
+			</div>
+        <div class="row rowInactive">
+            {% for table in table_list %}
+            {% if table.availaible %}
+            <div class="col-sm-3" id="Table{{ table.tableNumber }}">
+                <a href="{% url 'accounts:view_table' pk=table.tableNumber %}" target="_blank" class="btn btn-lg tableno">Table No. <span class="tablenos">&nbsp;{{ table.tableNumber }}</span></a>
+            </div>
+            {% endif %}
+						{% endfor %}
+        </div>
+    </div>
+<!--Inactive Tables Heading-->
+
+</div>
+<!--Table Tiles-->
+
+</div>
+
+<!--Left Section-->
+
+<!--Right Section -->
+<div id="right" class="split right">
+   <header id="rightheader"><i class="fas fa-bell"></i><span id="counter">0</span> Notifications</header>
+   <div class="container-fluid" id="notification">
+   </div>
+</div>
+<!--Right Section -->
+
+<script>
+	n = {{ table_list.count }}
+	let tableCount = new Array(n+1); for (let i=0; i<n+1; ++i) tableCount[i] = 0;
+</script>
+<script src="{% static 'js/accounts/all.js' %}"></script>
+<script src="{% static 'js/accounts/admin.js' %}"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,48 @@
+{% load static %}
+
+                <div class="row item menu{{ menu.pk }}">
+                    <button class="collapsible">
+                      <div class="col-xs-9"> <span class="menu-title">{{ menu.name }}</span></div>
+                      <div class="col-xs-3"><h5 class="item-price">€ {{ menu.price3 }}</h5></div>
+                       <div class="col-xs-10"><p class="menu-subtitle">für Zwei Personen nur € {{ menu.price2 }}</p></div>
+                        </button>
+                        <div class="content">
+                      {% if menu.image %}
+                      <div class="row quantityandspice">
+                          <div class="col-xs-12">
+                              <div class="container"><img src="{{ menu.image.url }}" class="img-responsive orderimg" style="border-radius: 20px;height: 180px;width: 585px" alt=""></div>
+                          </div>
+                      </div>
+                      {% endif %}
+                          {{ menu.body | safe }}
+
+                            {% if menu.options.count %}
+                            <div class="row form-group">
+                               <div style="margin-bottom: 0px" class="col-xs-5"><label id="priceLabel" for="price">Scharf :</label></div>
+                                <div class="col-xs-7 ">
+                                <select class="form-control select menu{{ menu.pk }}" id="spiceLevelthali" style="margin-bottom: 0px" class="spiceLevel" onchange="buttonDisableOnClick('menu{{ menu.pk }}')">
+                                  <option value="None">Select an option</option>
+                                  {% for option in menu.options.all %}
+                                    <option value="{{ option.name }}">{{ option.name }}</option>
+                                  {% endfor %}
+                                </select>
+                              </div>
+                            </div>
+                            {% endif %}
+                            <div class="row form-group">
+                                <div style="margin-bottom: 0px" class="col-xs-5"><label id="priceLabel" for="price">Preis (€) :</label></div>
+                                <div class="col-xs-7">
+                                  <select class="form-control select quantitymenu{{ menu.pk }}" id="price" style="margin-bottom: 0px" onchange="buttonDisableOnClick('menu{{ menu.pk }}')">
+                                    <option value="None">Select an option</option>
+                                    <option value="2">{{ menu.price2 }} €&nbsp;&nbsp;/&nbsp;&nbsp;Two Persons</option>
+                                    <option value="3">{{ menu.price3 }} €&nbsp;&nbsp;/&nbsp;&nbsp;Three Persons</option>
+                                    <option value="4">{{ menu.price4 }} €&nbsp;&nbsp;/&nbsp;&nbsp;Four Persons</option>
+                                    </select></div>
+                              </div>
+                            <div class="row">
+                             <div class="col-xs-12">
+                                 <button type="button" class="btn addToCart" onclick="addToCart('menu{{ menu.pk }}')"><i class="fas fa-shopping-cart"></i> &nbsp; Add to Cart</button>
+                             </div>
+                             </div>
+                 </div>
+                 </div>

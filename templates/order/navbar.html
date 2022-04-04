@@ -1,0 +1,49 @@
+{% load static %}
+
+<!--Pop Up Box-->
+<div class="modal" id="modal2" data-animation="mixInAnimations">
+  <div class="modal-dialog">
+    <header class="modal-header">Call Waiter</header>
+    <section class="modal-content">
+      <p>Someone will be with you shortly.</p>
+      <button id="close" class="close-modal" aria-label="close modal" data-close>
+        Close
+      </button>
+    </section>
+  </div>
+</div>
+
+<!--Pop Up Box-->
+
+
+<!--Navbar Starts Here -->
+    <nav id="navbar" class="navbar navbar-default">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button style="color: #FFECB1" type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span style="background-color: #FFECB1" class="sr-only">Toggle navigation</span>
+        <span style="background-color: #FFECB1" class="icon-bar"></span>
+        <span style="background-color: #FFECB1" class="icon-bar"></span>
+        <span style="background-color: #FFECB1" class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand"><img src="{% static 'images/order/Taj_india_Logo.png' %}" alt=""></a>
+      <a  href="#" id="callButton"  class="dropdown dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><img src="{% static 'images/order/waiter.png' %}"></a>
+          <ul class="dropdown-menu">
+            <li><a href="#" class="open-modal" data-open="modal2"><i class="fas fa-phone-volume"></i>&nbsp;&nbsp; Call Waiter</a></li>
+          </ul>
+         
+    </div>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="{% url 'order:menu' tableNumber=tableNumber %}">Menu Card</a></li>
+        <li><a href="{% url 'order:cart' tableNumber=tableNumber %}">Cart</a></li>
+        <li><a href="{% url 'order:order_list' tableNumber=tableNumber %}">Order Details</a></li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+<!--Navbar Ends Here-->

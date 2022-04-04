@@ -1,0 +1,140 @@
+{% extends "order/base.html" %}
+{% load static %}
+
+{% block head_block %}
+
+  	<link rel="stylesheet" href="{% static "css/order/cart.css" %}"/>
+  	<script>
+                history.pushState(null, null, document.title);
+        window.addEventListener('popstate', function () {
+            history.pushState(null, null, document.title);
+        });
+    </script>
+
+{% endblock %}
+
+
+{% block body_block %}
+
+<!--Pop Up Box-->
+<div class="modal" id="modal2" data-animation="mixInAnimations">
+  <div class="modal-dialog">
+    <header class="modal-header">Call Waiter</header>
+    <section class="modal-content">
+      <p>Someone will be with you shortly.</p>
+      <button id="close" class="close-modal" aria-label="close modal" data-close>
+        Close
+      </button>
+    </section>
+  </div>
+</div>
+
+<!--Pop Up Box-->
+
+{% if messages %}
+{% for message in messages %}
+
+<div class="modal1 animated slideInUp" id="modal">
+  <div class="modal-dialog1">
+    <header class="modal-header">Alert
+
+    </header>
+    <section class="modal-content">
+      <p>{{ message }}</p>
+      <button id="close" class="close-modal1" data-dismiss="alert" onclick="this.parentElement.parentElement.parentElement.style.display='none'">
+        Close
+      </button>
+    </section>
+  </div>
+</div>
+{% endfor %}
+{% endif %}
+
+
+
+<!--Navbar Starts Here -->
+    <nav id="navbar" class="navbar navbar-default">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button style="color: #FFECB1" type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span style="background-color: #FFECB1" class="sr-only">Toggle navigation</span>
+        <span style="background-color: #FFECB1" class="icon-bar"></span>
+        <span style="background-color: #FFECB1" class="icon-bar"></span>
+        <span style="background-color: #FFECB1" class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="{% url 'order:menuThanks' tableNumber=tableNumber %}"><img src="{% static 'images/order/Taj_india_Logo.png' %}" alt=""></a>
+      <a  href="#" id="callButton"  class="dropdown dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><img src="{% static 'images/order/waiter.png' %}"></a>
+          <ul class="dropdown-menu">
+            <li><a href="#" class="open-modal" data-open="modal2" onclick="CallWaiter({{ tableNumber }})"><i class="fas fa-phone-volume"></i>&nbsp;&nbsp; Call Waiter</a></li>
+          </ul>
+
+    </div>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="{% url 'order:menuThanks' tableNumber=tableNumber %}">Menu Card</a></li>
+        <!-- <li><a href="{% url 'order:cart' tableNumber=tableNumber %}">Cart</a></li>
+        <li><a href="{% url 'order:order_list' tableNumber=tableNumber %}">Order Details</a></li> -->
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+<!--Navbar Ends Here-->
+
+
+
+
+
+<!--Parralax Starts Here-->
+	<div class="header" style="background-image: url({% static 'images/order/parallex/cart.jpg' %});height: 500px">
+			<h1 id="heading" style="font-size: 50px;letter-spacing: 5px;padding-top: 160px">Thank you for visiting. Hope you liked our service</h1>
+	</div>
+<!--Parralax Ends Here-->
+
+<p class="thanks">Help Us Improve !</p>
+
+<!--Contact Section Starts Here   -->
+      <div class="col-sm-12">
+          <button class="feedback">Give Feedback</button>
+      </div>
+     <section id="contact">
+       <div class="container">
+           <div class="row">
+               <div class="col-sm-12 col-md-12 text-center">
+                   <h2 class="section-heading">Any Query, Write To Us</h2>
+                   <h3 class="section-subheading text-muted">Taj Restaurant</h3>
+               </div>
+           </div>
+           <div class="row">
+               <div class="col-sm-12 col-sm-12">
+                   <form name="sentMessage" id="contactForm" novalidate method="POST">
+                     {% csrf_token %}
+                       <div class="row">
+                               <div class="col-md-6">
+                                   <div class="form-group">
+                                       <textarea class="form-control" placeholder="Your Message *" id="message" required data-validation-required-message="Please enter a message." name="feedback"></textarea>
+                                       <p class="help-block text-danger"></p>
+                               </div>
+                           </div>
+                           <div class="clearfix"></div>
+                           <div class="col-lg-12 text-center">
+                               <div id="success"></div>
+                               <button type="submit" class="btn btn-xl">Send Message</button>
+                           </div>
+                       </div>
+                   </form>
+               </div>
+           </div>
+       </div>
+
+   </section>
+<!--Contact Section Ends Here	-->
+
+{% block foot_block %}
+  	<script src="{% static 'js/order/cart.js' %}"></script>
+{% endblock %}
+
+{% endblock %}

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+{% load static %}
+{% load bootstrap4 %}
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Taj India Restaurant</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+  </head>
+  <body>
+    <div class="split left" data-spy="scroll" data-target=".navbar" data-offset="50">
+      <!--  Navbar-->
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand">Taj India Restaurant</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'accounts:index' %}">Tables</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'accounts:items_list' %}">Items</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'accounts:options_list' %}">Options</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'accounts:feedback_list' %}">Feedback</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Profile
+          </a>
+          <div class="dropdown-menu navbar-dark bg-dark" aria-labelledby="navbarDropdownMenuLink">
+            <a class="dropdown-item" href="{% url 'accounts:change_password' %}" style="color:white;">Change Password</a>
+            <a class="dropdown-item" href="{% url 'accounts:logout' %}" style="color:white;">Logout</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </nav>
+      <!--  Navbar-->
+      <div class="jumbotron ">
+        <h1 class="float-left">Table No. {{ table.tableNumber }}</h1>
+        {% if table.availaible %}
+        <a href="{% url 'accounts:table_unavailaible' tableNumber=tableNumber %}" class="btn btn-primary btn-lg float-right">Make Table Active</a>
+        {% else %}
+        <a href="{% url 'accounts:table_availaible' tableNumber=tableNumber %}" class="btn btn-primary btn-lg float-right">Make Table Inactive</a>
+        {% endif %}
+      </div>
+
+      <div class="container">
+        <div class="jumbotron">
+          <h2>Current Order</h2>
+            {% if current_order %}
+            <div class="list-group">
+              {% for item in current_order.all %}
+              {% if item.ordered %}
+              <div class="list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-between">
+                  <h5 class="mb-1">{% if item.item %}{% if item.item.article_number %}{{ item.item.article_number }}. {% endif %}{% endif %}{{ item.get_name }}</h5>
+                  <div>
+                    <span class="float-right quantity" data-id="{{ item.pk }}"><b>Quantity:</b> <input type="number" value="{{ item.quantity }}" required></span>
+                    <span class="float-right mr-5 mt-1"><b>Total:</b> {{ item.getPrice }}</span>
+                  </div>
+                </div>
+                <div>
+                  {% if item.option1 %}
+                  <span class="float-left ml-4">({{ item.option1 }})</span>
+                  {% endif %}
+
+                  {% if item.option2 %}
+                  <span class="float-left ml-4">({{ item.option2 }})</span>
+                  {% endif %}
+
+                  {% if item.addOn %}
+                  <span class="float-left ml-4">Extra (+ {{ item.item.category.addOnPrice }} €): ({{ item.addOn }})</span>
+                  {% endif %}
+
+                  {% if item.person %}
+                  <span class="float-left ml-4">For {{ item.person }} person</span>
+                  {% endif %}
+                </div>
+                {% if item.description %}
+                <small>{{ item.description }}</small>
+                {% endif %}
+              </div>
+              {% endif %}
+              {% endfor %}
+
+              <div class="mt-4">
+                <h1 class="float-left">Total Bill: {{ get_total_ordered }}</h1>
+                <a class="btn btn-primary btn-lg float-right" href="{% url 'accounts:create_orderitem' tableNumber=tableNumber %}">Add Item</a>
+                <a class="btn btn-primary btn-lg float-right mr-3" onclick="saveOrder()">Save Order</a>
+              </div>
+
+
+            {% else %}
+              <h5 class="ml-5">*Currently there is no active order for this table*</h5>
+            {% endif %}
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="jumbotron">
+          <h3>Previous Orders</h3>
+            {% if previous_order %}
+
+            <table class="table">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col" class="col-xs-2" style="text-align: center;">#</th>
+                <th scope="col" class="col-xs-4" style="text-align: center;">Order Date</th>
+                <th scope="col" class="col-xs-3" style="text-align: center;">Amount</th>
+                <th scope="col" class="col-xs-3" style="text-align: center;">View Order</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for order in previous_order %}
+              <tr>
+                <th scope="row" class="col-xs-2" style="text-align: center;">{{ forloop.counter }}</th>
+                <td class="col-xs-4" style="text-align: center;">{{ order.orderDate }}</td>
+                <td class="col-xs-3" style="text-align: center;">{{ order.get_total_ordered }}</td>
+                <td class="col-xs-3" style="text-align: center;"><a class="btn btn-primary" href="{% url 'accounts:view_order' pk=order.pk %}">View Details</a></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+            </table>
+            {% else %}
+              <h5 class="ml-5">*Currently there are no previous orders on this table*</h5>
+            {% endif %}
+        </div>
+      </div>
+      <script>
+        function saveOrder() {
+          qty = document.getElementsByClassName("quantity");
+          myOrder = {};
+          for (var i=0; i<qty.length; i++) {
+            data = qty[i].getAttribute("data-id");
+            value = qty[i].querySelector('input').value;
+            if (!value) {
+              alert("Quantity must be filled out");
+              return;
+            }
+            myOrder[data] = parseInt(value);
+          }
+          $.ajax({
+              type: 'GET',
+              url: '/tajindiaadmin/update_cart',
+              data: {
+                  order: myOrder,
+              },
+              success: function(response) {
+                  console.log(response);
+                  window.location.href = "{% url 'accounts:view_table' pk=tableNumber %}";
+              }
+          });
+        }
+      </script>
+  </body>
+  </html>

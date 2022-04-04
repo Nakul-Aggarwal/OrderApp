@@ -1,0 +1,127 @@
+{% load static %}
+
+<div class="row item item{{ item.pk }}">
+    <button class="collapsible">
+         <div class="col-xs-9"> <span class="menu-title">{% if item.article_number %}{{ item.article_number }}. {% endif %}{{ item.name }}</span></div>
+         <div class="col-xs-3"><h5 class="item-price">€ {{ item.price }}</h5></div>
+         <div class="col-xs-10"><p class="menu-subtitle">{{ item.description }}</p></div>
+       </button>
+    <div class="content" id="fooditems">
+
+        {% if item.availaible %} {% if item.image %}
+        <div class="row quantityandspice">
+            <div class="col-xs-12">
+                <div class="container"><img src="{{ item.image.url }}" class="img-responsive orderimg" style="border-radius: 20px;height: 180px;width: 585px" alt=""></div>
+            </div>
+        </div>
+        {% endif %} {% if item.option1 %}
+        <br>
+        <div class="row form-group">
+            <div class="col-xs-5 quantityMargin">
+                <span class="quantityBtn">
+                            <span class="minusBtn incdecbutton" onclick="functionMinus('item{{ item.pk }}')">-</span>
+                <span class="mainBtn item{{ item.pk }}">1</span>
+                <span class="plusBtn incdecbutton" onclick="functionPlus('item{{ item.pk }}')">+</span>
+                </span>
+            </div>
+            <div class="col-xs-7">
+                <select class="form-control spiceLevel select item{{ item.pk }}" id="spiceLevel" onchange="buttonDisableOnClick('item{{ item.pk }}')">
+                                <option value="None">Select an option</option>
+                                {% for option in item.category.options.all %}
+                                <option value="{{ option.name }}">{{ option.name }}</option>
+                                {% endfor %}
+                              </select>
+            </div>
+        </div>
+        {% if item.options.count %}
+        <div class="row addones">
+            <div class="col-xs-5">
+                <label for="addOns">Select an option</label></div>
+            <div class="col-xs-7 form-group">
+                <select class="form-control select option2item{{ item.pk }}" name="addOns" id="addOns" onchange="buttonDisableOnClick('item{{ item.pk }}')">
+                                                         <option value="None">Select an option</option>
+                                                         {% for option in item.options.all %}
+                                                         <option value="{{ option.name }}">{{ option.name }}</option>
+                                                         {% endfor %}
+                                                       </select></div>
+        </div>
+
+        {% endif %} {% else %} {% if item.options.count %}
+        <br>
+        <div class="row form-group">
+            <div class="col-xs-5 quantityMargin">
+                <span class="quantityBtn">
+                            <span class="minusBtn incdecbutton" onclick="functionMinus('item{{ item.pk }}')">-</span>
+                <span class="mainBtn item{{ item.pk }}">1</span>
+                <span class="plusBtn incdecbutton" onclick="functionPlus('item{{ item.pk }}')">+</span>
+                </span>
+            </div>
+            <div class="col-xs-7">
+                <select class="form-control select option2item{{ item.pk }}" id="spiceLevel" onchange="buttonDisableOnClick('item{{ item.pk }}')">
+                                <option value="None">Select an option</option>
+                                {% for option in item.options.all %}
+                                <option value="{{ option.name }}">{{ option.name }}</option>
+                                {% endfor %}
+                              </select>
+            </div>
+        </div>
+        {% else %}
+        <br>
+        <div class="row">
+            <div class="col-xs-7">
+                <label for="addOns" id="selectquan">Select Quantity</label>
+            </div>
+            <div class="col-xs-5 quantityMargin">
+                <span class="quantityBtn">
+                          <span class="minusBtn incdecbutton" onclick="functionMinus('item{{ item.pk }}')">-</span>
+                <span class="mainBtn item{{ item.pk }}">1</span>
+                <span class="plusBtn incdecbutton" onclick="functionPlus('item{{ item.pk }}')">+</span>
+                </span>
+            </div>
+        </div>
+        <br>
+        <br> {% endif %} {% endif %} {% if item.addOn %}
+        <div class="row addones">
+            <div class="col-xs-5">
+                <label for="addOns">Extra Soße (+€ {{ item.category.addOnPrice }})</label></div>
+            <div class="col-xs-7 form-group">
+                <select class="form-control addonitem{{ item.pk }}" name="addOns" id="addOns" onchange="buttonDisableOnClick('item{{ item.pk }}')">
+                                                        <option value="None">Select an option</option>
+                                                        {% for option in item.category.extras.all %}
+                                                        <option value="{{ option.item }}">{{ option.item }}</option>
+                                                        {% endfor %}
+                                                      </select></div>
+        </div>
+        {% endif %}
+        <div class="row">
+            <div class="col-xs-12">
+                <button class="btn addToCart item{{ item.pk }}" onclick="addToCart('item{{ item.pk }}')"><i class="fas fa-shopping-cart"></i> &nbsp; Add to Cart</button>
+            </div>
+        </div>
+
+        {% if item.suggestions.all %}
+        <div class="row">
+            <div class="col-xs-12">
+                <span class="single-border-seprator"></span>
+                <p style="text-align: center;width: 100%;font-size: 18px">* It is best served with</p>
+            </div>
+        </div>
+        {% for suggests in item.suggestions.all %}
+        <div class="row">
+            <div class="col-xs-5">
+                <label class="extradish" for="extradish">{{ suggests.name }} <br> <span class="extraprice">(€ {{ suggests.price }})</span></label>
+            </div>
+            <div class="col-xs-7">
+                <button class="addextra btn btn-default" type="button" onclick="addSingleToCart('item{{ suggests.pk }}')">Add +</button>
+            </div>
+        </div>
+        {% endfor %} {% endif %} {% else %}
+
+        <div class="row unavilable">
+            <h2>Sorry This Item is Currently Unavilable!</h2>
+        </div>
+
+        {% endif %}
+
+    </div>
+</div>

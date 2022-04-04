@@ -1,0 +1,199 @@
+{% extends "order/base.html" %}
+{% load static %}
+
+{% block head_block %}
+
+  	<link rel="stylesheet" href="{% static "css/order/cart.css" %}"/>
+  	<script type="text/javascript">
+        function preventBack() {
+            window.history.forward();
+        }
+
+        setTimeout("preventBack()", 0);
+
+        window.onunload = function () { null };
+    </script>
+
+{% endblock %}
+
+
+{% block body_block %}
+
+<!--Pop Up Box-->
+<div class="modal" id="modal2" data-animation="mixInAnimations">
+  <div class="modal-dialog">
+    <header class="modal-header">Call Waiter</header>
+    <section class="modal-content">
+      <p>Someone will be with you shortly.</p>
+      <button id="close" class="close-modal" aria-label="close modal" data-close>
+        Close
+      </button>
+    </section>
+  </div>
+</div>
+
+<!--Pop Up Box-->
+
+{% if messages %}
+{% for message in messages %}
+
+<div class="modal1 animated slideInUp" id="modal">
+  <div class="modal-dialog1">
+    <header class="modal-header">Alert
+
+    </header>
+    <section class="modal-content">
+      <p>{{ message }}</p>
+      <button id="close" class="close-modal1" data-dismiss="alert" onclick="this.parentElement.parentElement.parentElement.style.display='none'">
+        Close
+      </button>
+    </section>
+  </div>
+</div>
+{% endfor %}
+{% endif %}
+
+
+
+<!--Navbar Starts Here -->
+    <nav id="navbar" class="navbar navbar-default">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button style="color: #FFECB1" type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span style="background-color: #FFECB1" class="sr-only">Toggle navigation</span>
+        <span style="background-color: #FFECB1" class="icon-bar"></span>
+        <span style="background-color: #FFECB1" class="icon-bar"></span>
+        <span style="background-color: #FFECB1" class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="{% url 'order:menu' tableNumber=tableNumber %}"><img src="{% static 'images/order/Taj_india_Logo.png' %}" alt=""></a>
+      <a  href="#" id="callButton"  class="dropdown dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><img src="{% static 'images/order/waiter.png' %}"></a>
+          <ul class="dropdown-menu">
+            <li><a href="#" class="open-modal" data-open="modal2" onclick="CallWaiter({{ tableNumber }})"><i class="fas fa-phone-volume"></i>&nbsp;&nbsp; Call Waiter</a></li>
+          </ul>
+
+    </div>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="{% url 'order:menu' tableNumber=tableNumber %}">Menu Card</a></li>
+        <li><a href="{% url 'order:cart' tableNumber=tableNumber %}">Cart</a></li>
+        <li><a href="{% url 'order:order_list' tableNumber=tableNumber %}">Order Details</a></li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+<!--Navbar Ends Here-->
+
+
+
+<!--Parralax Starts Here-->
+    <div class="header" style="background-image: url({% static 'images/order/parallex/cart.jpg' %})">
+        <h1 id="heading">Order Placed</h1>
+        <h3 id="subheading"><i class="far fa-thumbs-up"></i> Thank you for your order</h3>
+    </div>
+<!--Parralax Ends Here-->
+         {% for order_item in order.item.all %}
+         {% if order_item.ordered %}
+         <section id="order">
+           <div class="container-fluid">
+	            <div class="row">
+			             <div class="col-xs-7"><p class="itemname">{% if order_item.item %}{% if order_item.item.article_number %}{{ order_item.item.article_number }}. {% endif %}{% endif %}{{ order_item.get_name }}</p></div>
+			             <div class="col-xs-5">
+			                  <p class="quan">Quantity: {{ order_item.quantity }}</p>
+			             </div>
+              </div>
+              <div class="row">
+                    {% if order_item.person %}
+          			    <div class="col-xs-7">
+          			    <p class="spicelvl">(for {{ order_item.person }} person)</p>
+          			    </div>
+                    {% endif %}
+                    {% if order_item.option1 %}
+                    <div class="col-xs-7">
+                    <p class="spicelvl">({{ order_item.option1 }})</p>
+                    </div>
+                    {% else %}
+                    <div class="col-xs-7">
+                    <p class="spicelvl">Price</p>
+                    </div>
+                    {% endif %}
+                    {% if order_item.option2 %}
+                    <div class="col-xs-7">
+                      <p class="spicelvl">({{ order_item.option2 }})</p>
+                    </div>
+                    {% endif %}
+                    {% if order_item.addOn %}
+                    <div class="col-xs-7">
+                    <p class="spicelvl">{{ order_item.addOn }} (+{{ order_item.item.category.addOnPrice }} €)</p>
+                    </div>
+                    {% endif %}
+			             <div class="col-xs-5">
+			                  <p class="price">€ {{ order_item.getPrice }}</p>
+			             </div>
+            </div>
+		      </div>
+        </section>
+
+         {% endif %}
+         {% endfor %}
+
+         <div class="col-sm-12">
+         <a href="{% url 'order:menu' tableNumber=tableNumber %}"><button class="addMore">Place New Order</button></a>
+     </div>
+
+     <section id="total">
+     <div class="container-fluid">
+       <div class="row">
+
+      			    <div class="col-xs-7">
+      			    <p class="lefts" style="font-weight: bolder">GRAND TOTAL</p>
+
+      			    <p class="left" style="font-size: 13px">(VAT included)</p>
+      			</div>
+      			<div class="col-xs-5">
+      			    <p class="grandtotal" style="font-weight: bolder">€ {{ order.get_total_ordered }}</p>
+      			</div>
+
+     		</div>
+
+     </section>
+
+
+     <!--Content Here-->
+
+
+     <p class="thumbs"><i class="far fa-thumbs-up"></i></p>
+     <p class="thanks">Your food is being prepared in the kitchen, it will be served shortly.</p>
+
+     <!--Bring Before Label  -->
+         <div class="row" id="bring">
+             <div class="col-xs-8">
+                  <label for="bring">Do you want to split bill</label>
+             </div>
+             <div class="col-xs-4">
+                 <label class="switchb">
+                       <input type="checkbox" class="starters">
+                       <span class="sliderb round"></span>
+                 </label>
+             </div>
+         </div>
+     <!--Bring Before Label  -->
+     <br>
+
+      <!--Place Order Fixed-->
+
+         <div class="col-sm-12"><button id="orderButton" class="btn btn-lg" onclick="window.location.href = '{% url "order:thanks" tableNumber=tableNumber %}'">Request Bill</button></div>
+     <!--Place Order Fixed-->
+{% endblock %}
+
+{% block foot_block %}
+    <script>
+      if (!{{ order_items.count }}){
+        document.getElementById("orderButton").disabled = true;
+      }
+    </script>
+  	<script src="{% static 'js/order/cart.js' %}"></script>
+{% endblock %}
